@@ -1,0 +1,14 @@
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\bin\Debug\netcoreapp3.1\itacademy.exe
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\bin\Debug\netcoreapp3.1\itacademy.deps.json
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\bin\Debug\netcoreapp3.1\itacademy.runtimeconfig.json
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\bin\Debug\netcoreapp3.1\itacademy.runtimeconfig.dev.json
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\bin\Debug\netcoreapp3.1\itacademy.dll
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\bin\Debug\netcoreapp3.1\itacademy.pdb
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\obj\Debug\netcoreapp3.1\itacademy.csproj.AssemblyReference.cache
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\obj\Debug\netcoreapp3.1\itacademy.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\obj\Debug\netcoreapp3.1\itacademy.AssemblyInfoInputs.cache
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\obj\Debug\netcoreapp3.1\itacademy.AssemblyInfo.cs
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\obj\Debug\netcoreapp3.1\itacademy.csproj.CoreCompileInputs.cache
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\obj\Debug\netcoreapp3.1\itacademy.dll
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\obj\Debug\netcoreapp3.1\itacademy.pdb
+C:\Users\bernardo_felipetto\source\repos\itacademy\itacademy\obj\Debug\netcoreapp3.1\itacademy.genruntimeconfig.cache
