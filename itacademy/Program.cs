@@ -6,6 +6,27 @@ namespace itacademy
     {
         static void Main(string[] args)
         {
+
+            ExcelHandler handler = new ExcelHandler();
+
+
+
+            Console.WriteLine($"Digite a cidadeA");
+            string cidadeA = Console.ReadLine();
+
+            Console.WriteLine($"Digite a cidadeB");
+            string cidadeB = Console.ReadLine();
+
+            double distancia = handler.RetornaDistanciaCidades(cidadeA, cidadeB);
+            if (distancia != 0)
+            {
+                Console.WriteLine($"A distância é: {distancia}");
+            }
+            else
+            {
+                Console.WriteLine($"Não encontramos uma das cidades digitadas, tente novamente");
+            }
+
             Console.WriteLine("Coloque a distância desejada em km: ");
 
             //o read line é para ler a proxima string e converter de uma string para inteiro
@@ -31,14 +52,16 @@ namespace itacademy
             {
                 custoFrete = distanciaCidade * precoPorKMCaminhaoPequeno;
                 Console.WriteLine($"O custo do frete do caminhão pequeno é: {Math.Round(custoFrete, 2)}");
-            }else if (pesoProdutoTotal <= pesoCaminhaoMedio)
+            }
+            else if (pesoProdutoTotal <= pesoCaminhaoMedio)
             {
-                custoFrete= distanciaCidade * precoPorKMCaminhaoMedio;
+                custoFrete = distanciaCidade * precoPorKMCaminhaoMedio;
                 Console.WriteLine($"O custo do frete do caminhão Médio é: {Math.Round(custoFrete, 2)}");
 
-            }else if (pesoProdutoTotal <= pesoCaminhaoGrande)
+            }
+            else if (pesoProdutoTotal <= pesoCaminhaoGrande)
             {
-                custoFrete= distanciaCidade * precoPorKMCaminhaoGrande;
+                custoFrete = distanciaCidade * precoPorKMCaminhaoGrande;
                 Console.WriteLine($"O custo do frete do caminhão grande é: {Math.Round(custoFrete, 2)}");
             }
         }
