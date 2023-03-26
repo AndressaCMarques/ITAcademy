@@ -6,6 +6,7 @@ namespace itacademy
 {
     internal class Caminhao
     {
+
         public double calculaFrete(double distancia, string modalidadeCaminhao)
         {
             double frete = 0;
