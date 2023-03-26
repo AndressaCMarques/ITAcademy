@@ -24,8 +24,13 @@ namespace itacademy
             }
             else
             {
-                Console.WriteLine($"Não encontramos uma das cidades digitadas, tente novamente");
+                Console.WriteLine($"Distancia não encontrada, tente novamente");
             }
+
+
+
+
+
 
             Console.WriteLine("Coloque a distância desejada em km: ");
 

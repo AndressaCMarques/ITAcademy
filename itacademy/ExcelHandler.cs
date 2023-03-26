@@ -56,8 +56,16 @@ namespace itacademy
 
                 if (linhaPos != 0 && colunaPos != 0)
                 {
-                    distanciaCidades = (double)worksheet.Cells[linhaPos, colunaPos].Value;
-                    return distanciaCidades;
+                    var validacao = worksheet.Cells[linhaPos, colunaPos].Value;
+                    if (validacao!= null)
+                    {
+                        distanciaCidades = (double)worksheet.Cells[linhaPos, colunaPos].Value;
+                        return distanciaCidades;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
                 }
                 else
                 {
