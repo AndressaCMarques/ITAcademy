@@ -6,5 +6,9 @@ namespace itacademy
 {
     internal class Produtos
     {
+        //public double RetornaPesoTotal(double pesoProduto, string cidadeB)
+        //{
+
+        //}
     }
 }

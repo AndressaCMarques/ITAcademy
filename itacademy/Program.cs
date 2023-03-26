@@ -8,8 +8,7 @@ namespace itacademy
         {
 
             ExcelHandler handler = new ExcelHandler();
-
-
+            Caminhao caminhao = new Caminhao();
 
             Console.WriteLine($"Digite a cidadeA");
             string cidadeA = Console.ReadLine();
@@ -24,11 +23,23 @@ namespace itacademy
             }
             else
             {
-                Console.WriteLine($"Distancia não encontrada, tente novamente");
+                Console.WriteLine($"Cidade não encontrada, tente novamente");
             }
 
 
+            Console.WriteLine($"Digite a modalidade do transporte: pequeno, médio ou grande ");
+            string modalidadeCaminhao = Console.ReadLine();
 
+            double frete = caminhao.calculaFrete(distancia, modalidadeCaminhao);
+
+            if (frete != 0)
+            {
+                Console.WriteLine($"De {cidadeA} até {cidadeB}, utilizando um caminhão de porte {modalidadeCaminhao}, a distância é de {distancia}Km e o custo será de R$ {frete}");
+            }
+            else
+            {
+                Console.WriteLine($"Não foi possível identificar o porte do caminhão. Tente novamente.");
+            }
 
 
 
