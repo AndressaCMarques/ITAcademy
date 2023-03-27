@@ -9,112 +9,157 @@ namespace itacademy
         ExcelHandler gerenciadorExcel = new ExcelHandler();
         Frete freteClass = new Frete();
 
-        public bool MenuOpcao1()
+        public bool CotarFrete()
         {
-            Console.WriteLine($"Digite a cidade A");
+            Console.WriteLine($"\nDigite a cidade A");
             string cidadeA = Console.ReadLine();
 
-            Console.WriteLine($"Digite a cidade B");
+            Console.WriteLine($"\nDigite a cidade B");
             string cidadeB = Console.ReadLine();
 
             double distancia = gerenciadorExcel.RetornaDistanciaCidades(cidadeA, cidadeB);
 
             if (distancia == 0)
             {
-                Console.WriteLine($"Cidade não encontrada, tente novamente");
+                Console.WriteLine($"\nCidade não encontrada, tente novamente");
                 return true;
             }
 
-            Console.WriteLine($"Digite a modalidade do transporte: pequeno, médio ou grande ");
+            Console.WriteLine($"\nDigite a modalidade do transporte: pequeno, médio ou grande ");
             string modalidadeCaminhao = Console.ReadLine();
 
-            double valorFrete = freteClass.calculaFrete(distancia, modalidadeCaminhao);
+            double valorFrete = freteClass.CalculaFrete(distancia, modalidadeCaminhao);
 
             if (valorFrete != 0)
             {
-                Console.WriteLine($"De {cidadeA} até {cidadeB}, utilizando um caminhão de porte {modalidadeCaminhao}, a distância é de {distancia}Km e o custo será de R$ {valorFrete}");
+                Console.WriteLine($"\nDe {cidadeA} até {cidadeB}, utilizando um caminhão de porte {modalidadeCaminhao}, a distância é de {distancia}Km e o custo será de R$ {valorFrete}");
             }
             else
             {
-                Console.WriteLine($"Não foi possível identificar o porte do caminhão. Tente novamente.");
+                Console.WriteLine($"\nNão foi possível identificar o porte do caminhão. Tente novamente.");
                 return true;
             }
 
             return true;
         }
 
-        public Frete MenuOpcao2()
+        public Frete CadastrarFrete()
         {
             Frete frete = new Frete();
-
-            List<string> lista = AdicionaListaCidades();
-            if (lista.Count > 0)
+            try
             {
-                frete.CidadesLista = lista;
+
+                List<string> lista = AdicionaListaCidades();
+                if (lista.Count > 0)
+                {
+                    frete.CidadesLista = lista;
+                }
+                else
+                {
+                    Console.WriteLine("\nNão foi possivel cadastrar a lista de cidades. Crie um novo frete");
+                }
+
+                Console.WriteLine($"\nA lista de produtos pré cadastrados disponiveis é a seguinte: ");
+                foreach (var par in frete.produtos)
+                {
+                    Console.WriteLine($"Produto {par.Key} peso {par.Value}");
+                }
+
+                frete = AdicionarProdutoAoFrete(frete);
+
+                Console.WriteLine($"\nAgora adicione produtos ao frete: ");
+                foreach (var par in frete.produtos)
+                {
+                    Console.WriteLine($"\nProduto {par.Key} peso {par.Value}");
+                    Console.WriteLine($"\nGostaria de adicionar quantos deste produto?");
+                    int quantidadeProduto = Convert.ToInt32(Console.ReadLine());
+                    frete.QuantidadesProdutos.Add(quantidadeProduto);
+                }
+
+
+                frete.PesoTotal = frete.CalcularPesoTotal(frete.produtos, frete.QuantidadesProdutos);
+
+                Console.WriteLine($"\nO peso total deu {frete.PesoTotal}");
+                double distanciaTrecho;
+
+                //percorrendo um trecho de cada vez
+                for (int i = 0; i < frete.CidadesLista.Count-1; i++)
+                {
+                    frete.PesoTotal = frete.CalcularPesoTotal(frete.produtos, frete.QuantidadesProdutos);
+
+                    distanciaTrecho = gerenciadorExcel.RetornaDistanciaCidades(frete.CidadesLista[i], frete.CidadesLista[i+1]);
+                    frete.DistanciaTrecho.Add(distanciaTrecho);
+                    Console.WriteLine($"\nA distancia do trecho de {frete.CidadesLista[i]} para {frete.CidadesLista[i+1]} é de {distanciaTrecho} KM");
+
+                    frete.DistanciaTotal = frete.DistanciaTotal + distanciaTrecho;
+
+                    //nova lista de inteiros
+                    //logica de calculo dos caminhoes aqui(recebe o a distancia trecho, o peso total atual)
+                    //retorna a lista de inteiros sendo a pos 0 o numero de caminhoes pequenos, 1 medios e 2 grandes 
+                    //dai eu multiplico o valor da distancia do trecho pelo numero de cada caminhao pra ter os parciais e totais - isso sendo só pra esse trecho - adicionar a info em frete.custoCaminhaoPequeno
+                    //custoTotal = custo total + preço desse trecho
+                    //frete.custoTrecho = esse calculo ai
+
+                    Console.WriteLine($"\nDe {frete.CidadesLista[i]} para {frete.CidadesLista[i + 1]} é de {distanciaTrecho} KM");
+                    Console.WriteLine($"\nTransportando os seguintes produtos e quantidades: ");
+                    int count = 0;
+                    foreach (var par in frete.produtos)
+                    {
+                        Console.WriteLine($"Produto {par.Key} quantidade {frete.QuantidadesProdutos[count]}");
+                        Console.WriteLine($"Produto {par.Key} peso {par.Value}");
+                    }
+
+                    frete.CustoUnitarioMedio = (frete.CustoTotal / frete.QuantidadeTotalProdutos(frete.QuantidadesProdutos));
+                    Console.WriteLine($"\nUtilizando {frete.NumeroCaminhaoPequeno} caminhoes pequenos, {frete.NumeroCaminhaoMedio} caminhoes medios, {frete.NumeroCaminhaoGrande} caminhoes grandes,");
+                    Console.WriteLine($"\nResultando em um valor total de R$ {frete.CustoTotal}, sendo R${frete.CustoUnitarioMedio} o custo unitario médio");
+
+                    //adicionar logica para remover produtos do trecho x para y, o restante volta lá pra cima
+
+                }
+
+
+
+
+
+                return frete;
             }
-            else 
+            catch (Exception ex)
             {
-                Console.WriteLine("Não foi possivel cadastrar a lista de cidades. Crie um novo frete");
+                Console.WriteLine("\nErro Inesperado, tente novamente");
+                return frete;
             }
-
-
-
-            /*
-            Console.WriteLine($"A lista de produtos disponiveis é a seguinte: ");
-
-            foreach (var par in frete.produtos)
-            {
-                Console.WriteLine($"Produto {par.Key} peso {par.Value}");
-            }
-
-            Console.WriteLine($"Quantos celulares gostaria de adicionar?");
-            int quantidadeCelulares = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine($"Quantas geladeiras gostaria de adicionar?");
-            int quantidadeGeladeiras = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine($"Quantos freezers gostaria de adicionar?");
-            int quantidadeFreezers = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine($"Quantas cadeiras gostaria de adicionar?");
-            int quantidadeCadeiras = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine($"Quantas luminárias gostaria de adicionar?");
-            int quantidadeLuminarias = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine($"Quantas lavadoras de roupa gostaria de adicionar?");
-            int quantidadeLavadorasDeRoupa = Convert.ToInt32(Console.ReadLine());
-
-            double pesoTotal = frete.calcularPesoTotal(quantidadeCelulares, quantidadeGeladeiras, quantidadeFreezers,
-                quantidadeCadeiras, quantidadeLuminarias, quantidadeLavadorasDeRoupa);
-
-            Console.WriteLine($"O peso total deu {pesoTotal}");
-            */
-
-
-
-            return frete;
         }
 
-        public void MenuOpcao3(CadastroFrete cadastroFrete)
+        public void ConsultarDadosFretes(CadastroFrete cadastroFrete)
         {
             foreach (Frete frete in cadastroFrete.Transportes)
             {
-                Console.WriteLine("O frete cadastrado tem os seguintes dados:");
 
-                Console.WriteLine("Lista de cidades cadastradas:");
+                //custo total do frete
+                //custo medio por km       custo total/DistanciaTotal
+                //custo medio por produto  frete.CustoTotal / frete.QuantidadeTotalProdutos(frete.QuantidadesProdutos);
+                //custo total por trecho   for each no frete.custoTrecho
+                //custo total para cada modalidade consultar as 3 variaveis
+
+
+                Console.WriteLine("\nO frete cadastrado tem os seguintes dados:");
+
+                Console.WriteLine("\nLista de cidades cadastradas:");
                 foreach (string cidade in frete.CidadesLista)
                 {
                     Console.WriteLine($"- {cidade}");
                 }
 
-                Console.WriteLine("Lista de produtos cadastrados:");
+                Console.WriteLine("\nLista de produtos cadastrados:");
                 foreach (var par in frete.produtos)
                 {
                     Console.WriteLine($"Produto {par.Key} peso {par.Value}");
                 }
 
                 Console.WriteLine(frete.CustoTotal);
+
+                //numero total de itens
+                frete.TotaItensTransportados = frete.ImprimeTotalItensTransportados(frete.produtos, frete.QuantidadesProdutos);
 
             }
         }
@@ -126,13 +171,13 @@ namespace itacademy
             List<string> cidadesLista = new List<string>();
             try
             {
-                Console.WriteLine($"Quantas cidades você quer adicionar no percurso?");
+                Console.WriteLine($"\nQuantas cidades você quer adicionar no percurso?");
                 int numeroDeCidades = Convert.ToInt32(Console.ReadLine());
 
 
                 for (int paradas = 0; paradas < numeroDeCidades; paradas++)
                 {
-                    Console.WriteLine($"Digite o nome da cidade da proxima parada: ");
+                    Console.WriteLine($"\nDigite o nome da cidade da proxima parada: ");
                     string cidade = Console.ReadLine();
                     if (gerenciadorExcel.ConsultaCidadeExiste(cidade))
                     {
@@ -140,11 +185,11 @@ namespace itacademy
                     }
                     else
                     {
-                        Console.WriteLine($"Não foi possivel adicionar a cidade pois não foi encontrada");
+                        Console.WriteLine($"\nNão foi possivel adicionar a cidade pois não foi encontrada");
                     }
                 }
 
-                Console.WriteLine($"a lista de cidades é");
+                Console.WriteLine($"\na lista de cidades é");
                 foreach (string cidade in cidadesLista)
                 {
                     Console.WriteLine($"- {cidade}");
@@ -153,9 +198,40 @@ namespace itacademy
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erro Inesperado, tente novamente");
+                Console.WriteLine("\nErro Inesperado, tente novamente");
                 return cidadesLista;
             }
+        }
+
+        public Frete AdicionarProdutoAoFrete(Frete frete)
+        {
+
+            Console.WriteLine($"\nGostaria de cadastrar mais algum produto?");
+            Console.WriteLine($"Digite 1 para Sim");
+            Console.WriteLine($"Digite 2 para Nao");
+
+            string adicionarProduto = Console.ReadLine();
+
+            if (adicionarProduto != null && adicionarProduto.Equals("1"))
+            {
+                Console.WriteLine($"\nQuantos produtos gostaria de cadastrar?");
+                int quantidadeProdutos = Convert.ToInt32(Console.ReadLine());
+
+                for (int i = 0; i < quantidadeProdutos; i++)
+                {
+                    Console.WriteLine($"\nDigite o nome do produto a ser adicionado neste frete");
+                    string novoProduto = Console.ReadLine();
+
+                    Console.WriteLine($"\nDigite o peso do novo produto em KG");
+                    double novoPeso = Convert.ToDouble(Console.ReadLine());
+
+                    frete.produtos.Add(novoProduto, novoPeso);
+
+                    Console.WriteLine($"\nProduto cadastrado com sucesso!");
+                }
+            }
+
+            return frete;
         }
 
 
