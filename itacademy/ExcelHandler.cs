@@ -10,20 +10,24 @@ namespace itacademy
 {
     public class ExcelHandler
     {
+        string fileName;
+        string pathExcelCidades;
+        FileInfo excelCidades;
+
+        public ExcelHandler()
+        {
+            fileName = "Distancias.xlsx";
+            pathExcelCidades = Path.Combine(Environment.CurrentDirectory, fileName);
+            excelCidades = new FileInfo(pathExcelCidades);
+        }
 
         public double RetornaDistanciaCidades(string cidadeA, string cidadeB)
         {
-
-            string fileName = "Distancias.xlsx";
-            string pathExcelCidades = Path.Combine(Environment.CurrentDirectory, fileName);
-
-            FileInfo excelCidades = new FileInfo(pathExcelCidades);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             using (var package = new ExcelPackage(excelCidades))
             {
                 var worksheet = package.Workbook.Worksheets[0];
-
                 int linhaPos = 0;
                 int colunaPos = 0;
 
@@ -58,7 +62,7 @@ namespace itacademy
                 if (linhaPos != 0 && colunaPos != 0)
                 {
                     var validacao = worksheet.Cells[linhaPos, colunaPos].Value;
-                    if (validacao!= null)
+                    if (validacao != null)
                     {
                         distanciaCidades = (double)worksheet.Cells[linhaPos, colunaPos].Value;
                         return distanciaCidades;
@@ -72,10 +76,33 @@ namespace itacademy
                 {
                     return 0;
                 }
-
             }
+        }
 
+        public bool ConsultaCidadeExiste(string cidade)
+        {
 
+            bool existe = false;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage(excelCidades))
+            {
+                var worksheet = package.Workbook.Worksheets[0];
+
+                for (int linhaAtual = 2; linhaAtual <= worksheet.Dimension.End.Row; linhaAtual++)
+                {
+                    var cidadeLinha = worksheet.Cells[linhaAtual, 1].Value;
+                    if (cidadeLinha != null)
+                    {
+                        if (cidadeLinha.ToString() == cidade.ToUpper())
+                        {
+                            existe = true;
+                            break;
+                        }
+                    }
+                }
+                return existe;
+            }
         }
     }
 }
