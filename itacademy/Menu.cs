@@ -50,13 +50,13 @@ namespace itacademy
             {
 
                 List<string> lista = AdicionaListaCidades();
-                if (lista.Count > 0)
+                if (lista.Count > 1)
                 {
                     frete.CidadesLista = lista;
                 }
                 else
                 {
-                    Console.WriteLine("\nNão foi possivel cadastrar a lista de cidades. Crie um novo frete");
+                    Console.WriteLine("\nNão foi possivel cadastrar a lista com pelo menos 2 cidades para o frete. Crie um novo frete");
                 }
 
                 Console.WriteLine($"\nA lista de produtos pré cadastrados disponiveis é a seguinte: ");
@@ -71,7 +71,7 @@ namespace itacademy
                 foreach (var par in frete.produtos)
                 {
                     Console.WriteLine($"\nProduto {par.Key} peso {par.Value}");
-                    Console.WriteLine($"\nGostaria de adicionar quantos deste produto?");
+                    Console.WriteLine($"Gostaria de adicionar quantos deste produto?");
                     int quantidadeProduto = Convert.ToInt32(Console.ReadLine());
                     frete.QuantidadesProdutos.Add(quantidadeProduto);
                 }
@@ -85,29 +85,35 @@ namespace itacademy
                 frete.CustoTotal = 0;
 
                 //percorrendo um trecho de cada vez
-                for (int i = 0; i < frete.CidadesLista.Count-1; i++)
+                for (int i = 0; i < frete.CidadesLista.Count - 1; i++)
                 {
+                    //calcula o peso total fazendo a lista de quantidades de cada produto x o peso de cada um no dicionario seguindo a mesma ordem
                     frete.PesoTotal = frete.CalcularPesoTotal(frete.produtos, frete.QuantidadesProdutos);
 
-                    distanciaTrecho = gerenciadorExcel.RetornaDistanciaCidades(frete.CidadesLista[i], frete.CidadesLista[i+1]);
+                    //calcula o trecho de 2 cidades no percurso
+                    distanciaTrecho = gerenciadorExcel.RetornaDistanciaCidades(frete.CidadesLista[i], frete.CidadesLista[i + 1]);
                     frete.DistanciaTrecho.Add(distanciaTrecho);
-                    Console.WriteLine($"\nA distancia do trecho de {frete.CidadesLista[i]} para {frete.CidadesLista[i+1]} é de {distanciaTrecho} KM");
+                    Console.WriteLine($"\nA distancia do trecho de {frete.CidadesLista[i]} para {frete.CidadesLista[i + 1]} é de {distanciaTrecho} KM");
+
 
                     frete.DistanciaTotal = frete.DistanciaTotal + distanciaTrecho;
 
                     List<int> numeroCaminhoes = new List<int>();
-
                     numeroCaminhoes = frete.CalculaCaminhoes(frete.PesoTotal);
 
-                    frete.NumeroCaminhaoPequeno = frete.NumeroCaminhaoPequeno + numeroCaminhoes[0];
-                    frete.NumeroCaminhaoMedio = frete.NumeroCaminhaoMedio + numeroCaminhoes[1];
-                    frete.NumeroCaminhaoGrande = frete.NumeroCaminhaoGrande + numeroCaminhoes[2];
+                    frete.NumeroCaminhaoPequenoTotal = frete.NumeroCaminhaoPequenoTrecho + numeroCaminhoes[0];
+                    frete.NumeroCaminhaoMedioTotal = frete.NumeroCaminhaoMedioTrecho + numeroCaminhoes[1];
+                    frete.NumeroCaminhaoGrandeTotal = frete.NumeroCaminhaoGrandeTrecho + numeroCaminhoes[2];
 
-                    frete.CustoTrechoPequeno.Add(distanciaTrecho * frete.caminhoes["PEQUENO"] * frete.NumeroCaminhaoPequeno);
-                    frete.CustoTrechoMedio.Add(distanciaTrecho * frete.caminhoes["MÉDIO"] * frete.NumeroCaminhaoMedio);
-                    frete.CustoTrechoGrande.Add(distanciaTrecho * frete.caminhoes["GRANDE"] * frete.NumeroCaminhaoGrande);
+                    frete.NumeroCaminhaoPequenoTrecho = numeroCaminhoes[0];
+                    frete.NumeroCaminhaoMedioTrecho = numeroCaminhoes[1];
+                    frete.NumeroCaminhaoGrandeTrecho = numeroCaminhoes[2];
 
-                    frete.CustoTrechoTotal = frete.CustoCaminhaoPequeno + frete.CustoCaminhaoMedio + frete.CustoCaminhaoGrande;
+                    frete.CustoTrechoPequeno.Add(distanciaTrecho * frete.caminhoes["PEQUENO"] * frete.NumeroCaminhaoPequenoTrecho);
+                    frete.CustoTrechoMedio.Add(distanciaTrecho * frete.caminhoes["MÉDIO"] * frete.NumeroCaminhaoMedioTrecho);
+                    frete.CustoTrechoGrande.Add(distanciaTrecho * frete.caminhoes["GRANDE"] * frete.NumeroCaminhaoGrandeTrecho);
+
+                    frete.CustoTrechoTotal = frete.CustoTrechoPequeno[i] + frete.CustoTrechoMedio[i] + frete.CustoTrechoGrande[i];
 
                     frete.CustoTotal = frete.CustoTotal + frete.CustoTrechoTotal;
 
@@ -120,18 +126,22 @@ namespace itacademy
                     //custoFrete = distanciaCidade * precoPorKMCaminhaoGrande;
                     //Console.WriteLine($"O custo do frete do caminhão grande é: {Math.Round(custoFrete, 2)}");
 
-                    Console.WriteLine($"\nDe {frete.CidadesLista[i]} para {frete.CidadesLista[i + 1]} é de {distanciaTrecho} KM");
+                    //Console.WriteLine($"\nDe {frete.CidadesLista[i]} para {frete.CidadesLista[i + 1]} é de {distanciaTrecho} KM");
+                    
                     Console.WriteLine($"\nTransportando os seguintes produtos e quantidades: ");
                     int count = 0;
                     foreach (var par in frete.produtos)
                     {
-                        Console.WriteLine($"Produto {par.Key} quantidade {frete.QuantidadesProdutos[count]}");
-                        Console.WriteLine($"Produto {par.Key} peso {par.Value}");
+                        if (frete.QuantidadesProdutos[count] > 0)
+                        {
+                            Console.WriteLine($"Produto {par.Key} quantidade {frete.QuantidadesProdutos[count]} peso {par.Value}");
+                        }
+                        count++;
                     }
 
                     frete.CustoUnitarioMedio = (frete.CustoTrechoTotal / frete.QuantidadeTotalProdutos(frete.QuantidadesProdutos));
-                    Console.WriteLine($"\nUtilizando {frete.NumeroCaminhaoPequeno} caminhoes pequenos, {frete.NumeroCaminhaoMedio} caminhoes medios, {frete.NumeroCaminhaoGrande} caminhoes grandes, para o trecho");
-                    Console.WriteLine($"\nResultando em um valor total de R$ {frete.CustoTrechoTotal} para o trecho, sendo R${frete.CustoUnitarioMedio} o custo unitario médio pelo trecho");
+                    Console.WriteLine($"\nUtilizando {frete.NumeroCaminhaoPequenoTrecho} caminhoes pequenos, {frete.NumeroCaminhaoMedioTrecho} caminhoes medios, {frete.NumeroCaminhaoGrandeTrecho} caminhoes grandes, para o trecho");
+                    Console.WriteLine($"\nResultando em um valor total de R$ {frete.CustoTrechoTotal} para o trecho, sendo R${Math.Round(frete.CustoUnitarioMedio, 2)} o custo unitario médio pelo trecho");
 
                     //Console.WriteLine($"\nO caminhao chegou na {frete.CidadesLista[i + 1]}, deseja descarregar algum produto?");
 
@@ -140,7 +150,7 @@ namespace itacademy
 
                 }
 
-                Console.WriteLine($"\nO custo total de todos os trechos será de {frete.CustoTotal}");
+                Console.WriteLine($"\nO custo total de todos os trechos será de R${Math.Round(frete.CustoTotal, 2)}");
 
 
                 return frete;
@@ -256,7 +266,7 @@ namespace itacademy
             return frete;
         }
 
-        
+
 
     }
 }

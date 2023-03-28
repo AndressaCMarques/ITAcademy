@@ -24,9 +24,12 @@ namespace itacademy
 
         double custoMedioKM;
         double custoMedioTipoProduto;
-        int numeroCaminhaoPequeno;
-        int numeroCaminhaoMedio;
-        int numeroCaminhaoGrande;
+        int numeroCaminhaoPequenoTrecho;
+        int numeroCaminhaoMedioTrecho;
+        int numeroCaminhaoGrandeTrecho;        
+        int numeroCaminhaoPequenoTotal;
+        int numeroCaminhaoMedioTotal;
+        int numeroCaminhaoGrandeTotal;
         int numeroVeiculosTotal;
         int totaItensTransportados;
         double custoUnitarioMedio;
@@ -174,9 +177,9 @@ namespace itacademy
         public double PesoTotal { get => pesoTotal; set => pesoTotal = value; }
         public List<double> CustoTrechoPequeno { get => custoTrechoPequeno; set => custoTrechoPequeno = value; }
         public List<double> DistanciaTrecho { get => distanciaTrecho; set => distanciaTrecho = value; }
-        public int NumeroCaminhaoPequeno { get => numeroCaminhaoPequeno; set => numeroCaminhaoPequeno = value; }
-        public int NumeroCaminhaoMedio { get => numeroCaminhaoMedio; set => numeroCaminhaoMedio = value; }
-        public int NumeroCaminhaoGrande { get => numeroCaminhaoGrande; set => numeroCaminhaoGrande = value; }
+        public int NumeroCaminhaoPequenoTrecho { get => numeroCaminhaoPequenoTrecho; set => numeroCaminhaoPequenoTrecho = value; }
+        public int NumeroCaminhaoMedioTrecho { get => numeroCaminhaoMedioTrecho; set => numeroCaminhaoMedioTrecho = value; }
+        public int NumeroCaminhaoGrandeTrecho { get => numeroCaminhaoGrandeTrecho; set => numeroCaminhaoGrandeTrecho = value; }
         public int NumeroVeiculosTotal { get => numeroVeiculosTotal; set => numeroVeiculosTotal = value; }
         public double CustoUnitarioMedio { get => custoUnitarioMedio; set => custoUnitarioMedio = value; }
         public double CustoCaminhaoPequeno { get => custoCaminhaoPequeno; set => custoCaminhaoPequeno = value; }
@@ -185,5 +188,8 @@ namespace itacademy
         public List<double> CustoTrechoMedio { get => custoTrechoMedio; set => custoTrechoMedio = value; }
         public List<double> CustoTrechoGrande { get => custoTrechoGrande; set => custoTrechoGrande = value; }
         public double CustoTrechoTotal { get => custoTrechoTotal; set => custoTrechoTotal = value; }
+        public int NumeroCaminhaoPequenoTotal { get => numeroCaminhaoPequenoTotal; set => numeroCaminhaoPequenoTotal = value; }
+        public int NumeroCaminhaoMedioTotal { get => numeroCaminhaoMedioTotal; set => numeroCaminhaoMedioTotal = value; }
+        public int NumeroCaminhaoGrandeTotal { get => numeroCaminhaoGrandeTotal; set => numeroCaminhaoGrandeTotal = value; }
     }
 }
