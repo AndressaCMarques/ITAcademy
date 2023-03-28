@@ -82,6 +82,8 @@ namespace itacademy
                 Console.WriteLine($"\nO peso total deu {frete.PesoTotal}");
                 double distanciaTrecho;
 
+                frete.CustoTotal = 0;
+
                 //percorrendo um trecho de cada vez
                 for (int i = 0; i < frete.CidadesLista.Count-1; i++)
                 {
@@ -93,12 +95,30 @@ namespace itacademy
 
                     frete.DistanciaTotal = frete.DistanciaTotal + distanciaTrecho;
 
-                    //nova lista de inteiros
+                    List<int> numeroCaminhoes = new List<int>();
+
+                    numeroCaminhoes = frete.CalculaCaminhoes(frete.PesoTotal);
+
+                    frete.NumeroCaminhaoPequeno = frete.NumeroCaminhaoPequeno + numeroCaminhoes[0];
+                    frete.NumeroCaminhaoMedio = frete.NumeroCaminhaoMedio + numeroCaminhoes[1];
+                    frete.NumeroCaminhaoGrande = frete.NumeroCaminhaoGrande + numeroCaminhoes[2];
+
+                    frete.CustoTrechoPequeno.Add(distanciaTrecho * frete.caminhoes["PEQUENO"] * frete.NumeroCaminhaoPequeno);
+                    frete.CustoTrechoMedio.Add(distanciaTrecho * frete.caminhoes["MÉDIO"] * frete.NumeroCaminhaoMedio);
+                    frete.CustoTrechoGrande.Add(distanciaTrecho * frete.caminhoes["GRANDE"] * frete.NumeroCaminhaoGrande);
+
+                    frete.CustoTrechoTotal = frete.CustoCaminhaoPequeno + frete.CustoCaminhaoMedio + frete.CustoCaminhaoGrande;
+
+                    frete.CustoTotal = frete.CustoTotal + frete.CustoTrechoTotal;
+
                     //logica de calculo dos caminhoes aqui(recebe o a distancia trecho, o peso total atual)
                     //retorna a lista de inteiros sendo a pos 0 o numero de caminhoes pequenos, 1 medios e 2 grandes 
                     //dai eu multiplico o valor da distancia do trecho pelo numero de cada caminhao pra ter os parciais e totais - isso sendo só pra esse trecho - adicionar a info em frete.custoCaminhaoPequeno
                     //custoTotal = custo total + preço desse trecho
                     //frete.custoTrecho = esse calculo ai
+
+                    //custoFrete = distanciaCidade * precoPorKMCaminhaoGrande;
+                    //Console.WriteLine($"O custo do frete do caminhão grande é: {Math.Round(custoFrete, 2)}");
 
                     Console.WriteLine($"\nDe {frete.CidadesLista[i]} para {frete.CidadesLista[i + 1]} é de {distanciaTrecho} KM");
                     Console.WriteLine($"\nTransportando os seguintes produtos e quantidades: ");
@@ -109,13 +129,19 @@ namespace itacademy
                         Console.WriteLine($"Produto {par.Key} peso {par.Value}");
                     }
 
-                    frete.CustoUnitarioMedio = (frete.CustoTotal / frete.QuantidadeTotalProdutos(frete.QuantidadesProdutos));
-                    Console.WriteLine($"\nUtilizando {frete.NumeroCaminhaoPequeno} caminhoes pequenos, {frete.NumeroCaminhaoMedio} caminhoes medios, {frete.NumeroCaminhaoGrande} caminhoes grandes,");
-                    Console.WriteLine($"\nResultando em um valor total de R$ {frete.CustoTotal}, sendo R${frete.CustoUnitarioMedio} o custo unitario médio");
+                    frete.CustoUnitarioMedio = (frete.CustoTrechoTotal / frete.QuantidadeTotalProdutos(frete.QuantidadesProdutos));
+                    Console.WriteLine($"\nUtilizando {frete.NumeroCaminhaoPequeno} caminhoes pequenos, {frete.NumeroCaminhaoMedio} caminhoes medios, {frete.NumeroCaminhaoGrande} caminhoes grandes, para o trecho");
+                    Console.WriteLine($"\nResultando em um valor total de R$ {frete.CustoTrechoTotal} para o trecho, sendo R${frete.CustoUnitarioMedio} o custo unitario médio pelo trecho");
+
+                    //Console.WriteLine($"\nO caminhao chegou na {frete.CidadesLista[i + 1]}, deseja descarregar algum produto?");
+
 
                     //adicionar logica para remover produtos do trecho x para y, o restante volta lá pra cima
 
                 }
+
+                Console.WriteLine($"\nO custo total de todos os trechos será de {frete.CustoTotal}");
+
 
                 return frete;
             }
@@ -230,7 +256,7 @@ namespace itacademy
             return frete;
         }
 
-
+        
 
     }
 }

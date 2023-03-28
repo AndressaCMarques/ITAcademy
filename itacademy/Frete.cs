@@ -16,7 +16,10 @@ namespace itacademy
 
         double pesoTotal;
 
-        List<double> custoTrecho = new List<double>();
+        List<double> custoTrechoPequeno = new List<double>();
+        List<double> custoTrechoMedio = new List<double>();
+        List<double> custoTrechoGrande = new List<double>();
+        double custoTrechoTotal;
         double custoTotal;
 
         double custoMedioKM;
@@ -27,9 +30,9 @@ namespace itacademy
         int numeroVeiculosTotal;
         int totaItensTransportados;
         double custoUnitarioMedio;
-        int custoCaminhaoPequeno;
-        int custoCaminhaoMedio;
-        int custoCaminhaoGrande;
+        double custoCaminhaoPequeno;
+        double custoCaminhaoMedio;
+        double custoCaminhaoGrande;
 
         //custo total do frete
         //custo medio por km
@@ -73,9 +76,9 @@ namespace itacademy
             double pesoTotal = 0;
             int count = 0;
 
-            foreach(var par in produtos)
+            foreach (var par in produtos)
             {
-                pesoTotal = pesoTotal + (quantidadesProdutos[count] * par.Value) ;
+                pesoTotal = pesoTotal + (quantidadesProdutos[count] * par.Value);
                 count++;
             }
 
@@ -104,12 +107,58 @@ namespace itacademy
         public int QuantidadeTotalProdutos(List<int> quantidadesProdutos)
         {
             int total = 0;
-            foreach(var qnt in quantidadesProdutos)
+            foreach (var qnt in quantidadesProdutos)
             {
                 total = total + qnt;
             }
             return total;
-        } 
+        }
+
+        public List<int> CalculaCaminhoes(double pesoTotal)
+        {
+            List<int> caminhoes = new List<int>();
+            int capacidadeCaminhaoPequeno = 1000;
+            int capacidadeCaminhaoMedio = 4000;
+            int capacidadeCaminhaoGrande = 10000;
+
+            int quantidadePequeno = 0;
+            int quantidadeMedio = 0;
+            int quantidadeGrande = 0;
+
+            while (pesoTotal > 0)
+            {
+                //todo While peso > que 10k
+                //se o peso total é maior que 10k automaticamente pega um grande, subtrai a capacidade do grande e adiciona 1 ao numero de caminhoes grandes
+                while (pesoTotal > capacidadeCaminhaoGrande)
+                {
+                    pesoTotal = pesoTotal - capacidadeCaminhaoGrande;
+                    quantidadeGrande = quantidadeGrande + 1;
+                    //se o peso total é menor que o grande e maior que o medio, usa um grande, subtrai a capacidade e adiciona 1 ao numero de caminhoes grandes
+                }
+                
+                if (pesoTotal <= capacidadeCaminhaoGrande && pesoTotal > capacidadeCaminhaoMedio)
+                {
+                    pesoTotal = pesoTotal - capacidadeCaminhaoGrande;
+                    quantidadeGrande = quantidadeGrande + 1;
+                }//se o peso total é menor que o medio e maior que um pequeno usa um medio, subtrai a capacidade e adiciona 1 ao numero de caminhoes medios
+                else if (pesoTotal <= capacidadeCaminhaoMedio && pesoTotal > capacidadeCaminhaoPequeno)
+                {
+                    pesoTotal = pesoTotal - capacidadeCaminhaoMedio;
+                    quantidadeMedio = quantidadeMedio + 1;
+                }//se o peso total é menor que pequeno, um pequeno serve, subtrai a capacidade e adiciona 1 ao numero de caminhoes pequenos
+                else if (pesoTotal <= capacidadeCaminhaoPequeno)
+                {
+                    pesoTotal = pesoTotal - capacidadeCaminhaoPequeno;
+                    quantidadePequeno = quantidadePequeno + 1;
+                }
+            }
+
+            caminhoes.Add(quantidadePequeno);
+            caminhoes.Add(quantidadeMedio);
+            caminhoes.Add(quantidadeGrande);
+
+            return caminhoes;
+        }
 
 
 
@@ -123,15 +172,18 @@ namespace itacademy
         public List<string> CidadesLista { get => cidadesLista; set => cidadesLista = value; }
         public List<int> QuantidadesProdutos { get => quantidadesProdutos; set => quantidadesProdutos = value; }
         public double PesoTotal { get => pesoTotal; set => pesoTotal = value; }
-        public List<double> CustoTrecho { get => custoTrecho; set => custoTrecho = value; }
+        public List<double> CustoTrechoPequeno { get => custoTrechoPequeno; set => custoTrechoPequeno = value; }
         public List<double> DistanciaTrecho { get => distanciaTrecho; set => distanciaTrecho = value; }
         public int NumeroCaminhaoPequeno { get => numeroCaminhaoPequeno; set => numeroCaminhaoPequeno = value; }
         public int NumeroCaminhaoMedio { get => numeroCaminhaoMedio; set => numeroCaminhaoMedio = value; }
         public int NumeroCaminhaoGrande { get => numeroCaminhaoGrande; set => numeroCaminhaoGrande = value; }
         public int NumeroVeiculosTotal { get => numeroVeiculosTotal; set => numeroVeiculosTotal = value; }
         public double CustoUnitarioMedio { get => custoUnitarioMedio; set => custoUnitarioMedio = value; }
-        public int CustoCaminhaoPequeno { get => custoCaminhaoPequeno; set => custoCaminhaoPequeno = value; }
-        public int CustoCaminhaoMedio { get => custoCaminhaoMedio; set => custoCaminhaoMedio = value; }
-        public int CustoCaminhaoGrande { get => custoCaminhaoGrande; set => custoCaminhaoGrande = value; }
+        public double CustoCaminhaoPequeno { get => custoCaminhaoPequeno; set => custoCaminhaoPequeno = value; }
+        public double CustoCaminhaoMedio { get => custoCaminhaoMedio; set => custoCaminhaoMedio = value; }
+        public double CustoCaminhaoGrande { get => custoCaminhaoGrande; set => custoCaminhaoGrande = value; }
+        public List<double> CustoTrechoMedio { get => custoTrechoMedio; set => custoTrechoMedio = value; }
+        public List<double> CustoTrechoGrande { get => custoTrechoGrande; set => custoTrechoGrande = value; }
+        public double CustoTrechoTotal { get => custoTrechoTotal; set => custoTrechoTotal = value; }
     }
 }
