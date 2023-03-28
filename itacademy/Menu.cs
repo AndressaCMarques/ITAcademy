@@ -117,10 +117,6 @@ namespace itacademy
 
                 }
 
-
-
-
-
                 return frete;
             }
             catch (Exception ex)
