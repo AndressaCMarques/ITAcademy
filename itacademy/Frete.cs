@@ -163,8 +163,7 @@ namespace itacademy
             return caminhoes;
         }
 
-
-
+        
 
 
         public double DistanciaTotal { get => distanciaTotal; set => distanciaTotal = value; }
