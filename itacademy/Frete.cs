@@ -33,9 +33,9 @@ namespace itacademy
         int numeroVeiculosTotal;
         int totaItensTransportados;
         double custoUnitarioMedio;
-        double custoCaminhaoPequeno;
-        double custoCaminhaoMedio;
-        double custoCaminhaoGrande;
+        double custoCaminhaoPequenoTotal;
+        double custoCaminhaoMedioTotal;
+        double custoCaminhaoGrandeTotal;
 
         //custo total do frete
         //custo medio por km
@@ -107,7 +107,7 @@ namespace itacademy
             return total;
         }
 
-        public int QuantidadeTotalProdutos(List<int> quantidadesProdutos)
+        public int QuantidadeTotalProdutosParaTrecho(List<int> quantidadesProdutos)
         {
             int total = 0;
             foreach (var qnt in quantidadesProdutos)
@@ -181,9 +181,9 @@ namespace itacademy
         public int NumeroCaminhaoGrandeTrecho { get => numeroCaminhaoGrandeTrecho; set => numeroCaminhaoGrandeTrecho = value; }
         public int NumeroVeiculosTotal { get => numeroVeiculosTotal; set => numeroVeiculosTotal = value; }
         public double CustoUnitarioMedio { get => custoUnitarioMedio; set => custoUnitarioMedio = value; }
-        public double CustoCaminhaoPequeno { get => custoCaminhaoPequeno; set => custoCaminhaoPequeno = value; }
-        public double CustoCaminhaoMedio { get => custoCaminhaoMedio; set => custoCaminhaoMedio = value; }
-        public double CustoCaminhaoGrande { get => custoCaminhaoGrande; set => custoCaminhaoGrande = value; }
+        public double CustoCaminhaoPequenoTotal { get => custoCaminhaoPequenoTotal; set => custoCaminhaoPequenoTotal = value; }
+        public double CustoCaminhaoMedioTotal { get => custoCaminhaoMedioTotal; set => custoCaminhaoMedioTotal = value; }
+        public double CustoCaminhaoGrandeTotal { get => custoCaminhaoGrandeTotal; set => custoCaminhaoGrandeTotal = value; }
         public List<double> CustoTrechoMedio { get => custoTrechoMedio; set => custoTrechoMedio = value; }
         public List<double> CustoTrechoGrande { get => custoTrechoGrande; set => custoTrechoGrande = value; }
         public double CustoTrechoTotal { get => custoTrechoTotal; set => custoTrechoTotal = value; }

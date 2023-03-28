@@ -32,7 +32,7 @@ namespace itacademy
 
             if (valorFrete != 0)
             {
-                Console.WriteLine($"\nDe {cidadeA} até {cidadeB}, utilizando um caminhão de porte {modalidadeCaminhao}, a distância é de {distancia}Km e o custo será de R$ {valorFrete}");
+                Console.WriteLine($"\nDe {cidadeA} até {cidadeB}, utilizando um caminhão de porte {modalidadeCaminhao}, a distância é de {distancia}Km e o custo será de R$ {Math.Round(valorFrete, 2)}");
             }
             else
             {
@@ -50,7 +50,7 @@ namespace itacademy
             {
 
                 List<string> lista = AdicionaListaCidades();
-                
+
                 if (lista.Count > 1)
                 {
                     frete.CidadesLista = lista;
@@ -59,7 +59,7 @@ namespace itacademy
                 {
                     Console.WriteLine("\nNão foi possivel cadastrar a lista com pelo menos 2 cidades para o frete. Crie um novo frete");
                 }
-                
+
                 Console.WriteLine($"\nA lista de produtos pré cadastrados disponiveis é a seguinte: ");
                 foreach (var linha in frete.produtos)
                 {
@@ -73,16 +73,12 @@ namespace itacademy
                 {
                     Console.WriteLine($"\nProduto {par.Key} peso {par.Value}");
                     Console.WriteLine($"Gostaria de adicionar quantos deste produto?");
-                    int quantidadeProduto = Convert.ToInt32(Console.ReadLine());
-                    frete.QuantidadesProdutos.Add(quantidadeProduto);
+                    int quantidadeProdutoInput = Convert.ToInt32(Console.ReadLine());
+                    frete.QuantidadesProdutos.Add(quantidadeProdutoInput);
+                    frete.TotaItensTransportados = frete.TotaItensTransportados + quantidadeProdutoInput;
                 }
 
-
-                frete.PesoTotal = frete.CalcularPesoTotal(frete.produtos, frete.QuantidadesProdutos);
-
-                Console.WriteLine($"\nO peso total deu {frete.PesoTotal}");
                 double distanciaTrecho;
-
                 frete.CustoTotal = 0;
 
                 //percorrendo um trecho de cada vez
@@ -90,6 +86,7 @@ namespace itacademy
                 {
                     //calcula o peso total fazendo a lista de quantidades de cada produto x o peso de cada um no dicionario seguindo a mesma ordem
                     frete.PesoTotal = frete.CalcularPesoTotal(frete.produtos, frete.QuantidadesProdutos);
+                    Console.WriteLine($"\nO peso total deu {frete.PesoTotal}");
 
                     //calcula o trecho de 2 cidades no percurso
                     distanciaTrecho = gerenciadorExcel.RetornaDistanciaCidades(frete.CidadesLista[i], frete.CidadesLista[i + 1]);
@@ -116,6 +113,10 @@ namespace itacademy
 
                     frete.CustoTrechoTotal = frete.CustoTrechoPequeno[i] + frete.CustoTrechoMedio[i] + frete.CustoTrechoGrande[i];
 
+                    frete.CustoCaminhaoPequenoTotal = frete.CustoCaminhaoPequenoTotal + frete.CustoTrechoPequeno[i];
+                    frete.CustoCaminhaoMedioTotal = frete.CustoCaminhaoMedioTotal + frete.CustoTrechoMedio[i];
+                    frete.CustoCaminhaoGrandeTotal = frete.CustoCaminhaoGrandeTotal + frete.CustoTrechoGrande[i];
+
                     frete.CustoTotal = frete.CustoTotal + frete.CustoTrechoTotal;
 
                     Console.WriteLine($"\nTransportando os seguintes produtos e quantidades: ");
@@ -129,73 +130,42 @@ namespace itacademy
                         count++;
                     }
 
-                    frete.CustoUnitarioMedio = (frete.CustoTrechoTotal / frete.QuantidadeTotalProdutos(frete.QuantidadesProdutos));
+                    frete.CustoUnitarioMedio = (frete.CustoTrechoTotal / frete.QuantidadeTotalProdutosParaTrecho(frete.QuantidadesProdutos));
                     Console.WriteLine($"\nUtilizando {frete.NumeroCaminhaoPequenoTrecho} caminhoes pequenos, {frete.NumeroCaminhaoMedioTrecho} caminhoes medios, {frete.NumeroCaminhaoGrandeTrecho} caminhoes grandes, para o trecho");
                     Console.WriteLine($"Resultando em um valor total de R$ {Math.Round(frete.CustoTrechoTotal, 2)} para o trecho, sendo R${Math.Round(frete.CustoUnitarioMedio, 2)} o custo unitario médio pelo trecho");
 
                     Console.WriteLine($"\nO caminhao chegou na {frete.CidadesLista[i + 1]}, deseja descarregar algum produto?");
+
                     Console.WriteLine($"\nDigite 1 para sim ou 2 para não:");
                     var descarregarProduto = Console.ReadLine();
+
                     if (descarregarProduto == "1")
                     {
                         int posicao = 0;
                         foreach (var linha in frete.produtos)
                         {
-                            Console.WriteLine($"{linha.Key} Gostaria de descarregar quantos desse item?");
-                            int quantidadeProdutoDescarregado = Convert.ToInt32(Console.ReadLine());
-                            frete.QuantidadesProdutos[posicao] = frete.QuantidadesProdutos[posicao] - quantidadeProdutoDescarregado;
-                            posicao = posicao + 1;
+                            if (frete.QuantidadesProdutos[posicao] > 0)
+                            {
+                                Console.WriteLine($"Gostaria de descarregar quantos desse item: {linha.Key}?");
+                                int quantidadeProdutoDescarregado = Convert.ToInt32(Console.ReadLine());
+
+                                if (frete.QuantidadesProdutos[posicao] >= quantidadeProdutoDescarregado && quantidadeProdutoDescarregado >= 0)
+                                {
+                                    frete.QuantidadesProdutos[posicao] = frete.QuantidadesProdutos[posicao] - quantidadeProdutoDescarregado;
+                                    posicao = posicao + 1;
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Não é possivel retirar uma quantidade maior do que a quantidade cadastrada");
+                                }
+                            }
                         }
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    //adicionar logica para remover produtos do trecho x para y, o restante volta lá pra cima
-
-                    /*
-                    Console.WriteLine($"Digite 1 para Sim");
-                    Console.WriteLine($"Digite 2 para Nao");
-
-                    string adicionarProduto = Console.ReadLine();
-
-                    if (adicionarProduto != null && adicionarProduto.Equals("1"))
-                    {
-                        Console.WriteLine($"\nQuantos produtos gostaria de cadastrar?");
-                        int quantidadeProdutos = Convert.ToInt32(Console.ReadLine());
-
-                        for (int i = 0; i < quantidadeProdutos; i++)
-                        {
-                            Console.WriteLine($"\nDigite o nome do produto a ser adicionado neste frete");
-                            string novoProduto = Console.ReadLine();
-
-                            Console.WriteLine($"\nDigite o peso do novo produto em KG");
-                            double novoPeso = Convert.ToDouble(Console.ReadLine());
-
-                            frete.produtos.Add(novoProduto, novoPeso);
-
-                            Console.WriteLine($"\nProduto cadastrado com sucesso!");
-                        }
-                    }*/
-
                 }
 
                 Console.WriteLine($"\nO custo total de todos os trechos será de {Math.Round(frete.CustoTotal, 2)}");
-
-
+                frete.CustoMedioKM = frete.CustoTotal / frete.DistanciaTotal;
+                frete.CustoMedioTipoProduto = frete.CustoTotal / frete.TotaItensTransportados;
                 return frete;
             }
             catch (Exception ex)
@@ -209,33 +179,21 @@ namespace itacademy
         {
             foreach (Frete frete in cadastroFrete.Transportes)
             {
-
-                //custo total do frete
-                //custo medio por km       custo total/DistanciaTotal
-                //custo medio por produto  frete.CustoTotal / frete.QuantidadeTotalProdutos(frete.QuantidadesProdutos);
-                //custo total por trecho   for each no frete.custoTrecho
-                //custo total para cada modalidade consultar as 3 variaveis
-
-
                 Console.WriteLine("\nO frete cadastrado tem os seguintes dados:");
+                Console.WriteLine($"\nO valor total do frete é de: R${Math.Round(frete.CustoTotal, 2)}");
+                Console.WriteLine($"\nO valor médio por KM do frete é de: R${Math.Round(frete.CustoMedioKM, 2)}");
+                Console.WriteLine($"\nO custo médio por produto do frete é de: R${Math.Round(frete.CustoMedioTipoProduto, 2)}");
 
-                Console.WriteLine("\nLista de cidades cadastradas:");
-                foreach (string cidade in frete.CidadesLista)
+                double custoTotalPorTrecho = 0;
+                for (int i = 0; i < frete.CustoTrechoGrande.Count; i++)
                 {
-                    Console.WriteLine($"- {cidade}");
+                    custoTotalPorTrecho = frete.CustoTrechoPequeno[i] + frete.CustoTrechoMedio[i] + frete.CustoTrechoGrande[i];
+                    Console.WriteLine($"\nO custo total por trecho do frete é de: R${Math.Round(custoTotalPorTrecho, 2)}");
                 }
 
-                Console.WriteLine("\nLista de produtos cadastrados:");
-                foreach (var par in frete.produtos)
-                {
-                    Console.WriteLine($"Produto {par.Key} peso {par.Value}");
-                }
-
-                Console.WriteLine(frete.CustoTotal);
-
-                //numero total de itens
-                frete.TotaItensTransportados = frete.ImprimeTotalItensTransportados(frete.produtos, frete.QuantidadesProdutos);
-
+                Console.WriteLine($"\nO custo total para a modalidade pequeno é de: R${Math.Round(frete.CustoCaminhaoPequenoTotal, 2)}");
+                Console.WriteLine($"\nO custo total para a modalidade medio é de: R${Math.Round(frete.CustoCaminhaoMedioTotal, 2)}");
+                Console.WriteLine($"\nO custo total para a modalidade grande é de: R${Math.Round(frete.CustoCaminhaoGrandeTotal, 2)}");
             }
         }
 
