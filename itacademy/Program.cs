@@ -21,6 +21,7 @@ namespace itacademy
                     case "1":
                         menu.CotarFrete();
                         mostrarMenu = true;
+                        menuPrincipal();
                         break;
                     case "2":
                         Frete freteMenu = menu.CadastrarFrete();
