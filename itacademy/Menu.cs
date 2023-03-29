@@ -184,24 +184,28 @@ namespace itacademy
             int countFrete = 0;
             foreach (Frete frete in cadastroFrete.Transportes)
             {
-                Console.WriteLine($"\nO frete de posição {countFrete} cadastrado tem os seguintes dados:");
-                Console.WriteLine($"\nO valor total do frete é de: R${Math.Round(frete.CustoTotal, 2)}");
-                Console.WriteLine($"\nO valor médio por KM do frete é de: R${Math.Round(frete.CustoMedioKM, 2)}");
-                Console.WriteLine($"\nO custo médio por produto do frete é de: R${Math.Round(frete.CustoMedioTipoProduto, 2)}");
-
-                double custoTotalPorTrecho = 0;
-                int countTrecho = 0;
-                for (int i = 0; i < frete.CustoTrechoGrande.Count; i++)
+                if (frete.CustoTotal > 0)
                 {
-                    custoTotalPorTrecho = frete.CustoTrechoPequeno[i] + frete.CustoTrechoMedio[i] + frete.CustoTrechoGrande[i];
-                    Console.WriteLine($"\nO custo total do trecho {countTrecho} do frete  é de: R${Math.Round(custoTotalPorTrecho, 2)}");
-                    Console.WriteLine($"A distancia do trecho {countTrecho} do frete foi de {frete.DistanciaTrecho[i]}");
-                    countTrecho++;
-                }
+                    Console.WriteLine($"\nO frete de posição {countFrete} cadastrado tem os seguintes dados:");
+                    Console.WriteLine($"\nO valor total do frete é de: R${Math.Round(frete.CustoTotal, 2)}");
+                    Console.WriteLine($"\nO valor médio por KM do frete é de: R${Math.Round(frete.CustoMedioKM, 2)}");
+                    Console.WriteLine($"\nO custo médio por produto do frete é de: R${Math.Round(frete.CustoMedioTipoProduto, 2)}");
 
-                Console.WriteLine($"\nO custo total para a modalidade pequeno é de: R${Math.Round(frete.CustoCaminhaoPequenoTotal, 2)}");
-                Console.WriteLine($"\nO custo total para a modalidade medio é de: R${Math.Round(frete.CustoCaminhaoMedioTotal, 2)}");
-                Console.WriteLine($"\nO custo total para a modalidade grande é de: R${Math.Round(frete.CustoCaminhaoGrandeTotal, 2)}");
+                    double custoTotalPorTrecho = 0;
+                    int countTrecho = 0;
+                    for (int i = 0; i < frete.CustoTrechoGrande.Count; i++)
+                    {
+                        custoTotalPorTrecho = frete.CustoTrechoPequeno[i] + frete.CustoTrechoMedio[i] + frete.CustoTrechoGrande[i];
+                        Console.WriteLine($"\nO custo total do trecho {countTrecho} do frete  é de: R${Math.Round(custoTotalPorTrecho, 2)}");
+                        Console.WriteLine($"A distancia do trecho {countTrecho} do frete foi de {frete.DistanciaTrecho[i]}");
+                        countTrecho++;
+                    }
+
+                    Console.WriteLine($"\nO custo total para a modalidade pequeno é de: R${Math.Round(frete.CustoCaminhaoPequenoTotal, 2)}");
+                    Console.WriteLine($"\nO custo total para a modalidade medio é de: R${Math.Round(frete.CustoCaminhaoMedioTotal, 2)}");
+                    Console.WriteLine($"\nO custo total para a modalidade grande é de: R${Math.Round(frete.CustoCaminhaoGrandeTotal, 2)}");
+                    Console.WriteLine($"\n###############################################################################################");
+                }
                 countFrete++;
             }
         }
