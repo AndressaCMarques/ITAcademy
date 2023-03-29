@@ -26,7 +26,7 @@ namespace itacademy
         double custoMedioTipoProduto;
         int numeroCaminhaoPequenoTrecho;
         int numeroCaminhaoMedioTrecho;
-        int numeroCaminhaoGrandeTrecho;        
+        int numeroCaminhaoGrandeTrecho;
         int numeroCaminhaoPequenoTotal;
         int numeroCaminhaoMedioTotal;
         int numeroCaminhaoGrandeTotal;
@@ -130,24 +130,40 @@ namespace itacademy
 
             while (pesoTotal > 0)
             {
-                //todo While peso > que 10k
+                //While peso > que 10k
                 //se o peso total é maior que 10k automaticamente pega um grande, subtrai a capacidade do grande e adiciona 1 ao numero de caminhoes grandes
-                while (pesoTotal > capacidadeCaminhaoGrande)
+                while (pesoTotal >= capacidadeCaminhaoGrande)
                 {
                     pesoTotal = pesoTotal - capacidadeCaminhaoGrande;
                     quantidadeGrande = quantidadeGrande + 1;
                     //se o peso total é menor que o grande e maior que o medio, usa um grande, subtrai a capacidade e adiciona 1 ao numero de caminhoes grandes
                 }
-                
+
                 if (pesoTotal <= capacidadeCaminhaoGrande && pesoTotal > capacidadeCaminhaoMedio)
                 {
-                    pesoTotal = pesoTotal - capacidadeCaminhaoGrande;
-                    quantidadeGrande = quantidadeGrande + 1;
+                    if (pesoTotal <= 2 * capacidadeCaminhaoMedio && pesoTotal > capacidadeCaminhaoMedio)
+                    {
+                        pesoTotal = pesoTotal - (capacidadeCaminhaoMedio * 2);
+                        quantidadeMedio = quantidadeMedio + 2;
+                    }
+                    else
+                    {
+                        pesoTotal = pesoTotal - capacidadeCaminhaoGrande;
+                        quantidadeGrande = quantidadeGrande + 1;
+                    }
                 }//se o peso total é menor que o medio e maior que um pequeno usa um medio, subtrai a capacidade e adiciona 1 ao numero de caminhoes medios
                 else if (pesoTotal <= capacidadeCaminhaoMedio && pesoTotal > capacidadeCaminhaoPequeno)
                 {
-                    pesoTotal = pesoTotal - capacidadeCaminhaoMedio;
-                    quantidadeMedio = quantidadeMedio + 1;
+                    if (pesoTotal <= 2 * capacidadeCaminhaoPequeno && pesoTotal > capacidadeCaminhaoPequeno)
+                    {
+                        pesoTotal = pesoTotal - (capacidadeCaminhaoPequeno * 2);
+                        quantidadePequeno = quantidadePequeno + 2;
+                    }
+                    else
+                    {
+                        pesoTotal = pesoTotal - capacidadeCaminhaoMedio;
+                        quantidadeMedio = quantidadeMedio + 1;
+                    }
                 }//se o peso total é menor que pequeno, um pequeno serve, subtrai a capacidade e adiciona 1 ao numero de caminhoes pequenos
                 else if (pesoTotal <= capacidadeCaminhaoPequeno)
                 {
@@ -163,7 +179,7 @@ namespace itacademy
             return caminhoes;
         }
 
-        
+
 
 
         public double DistanciaTotal { get => distanciaTotal; set => distanciaTotal = value; }
